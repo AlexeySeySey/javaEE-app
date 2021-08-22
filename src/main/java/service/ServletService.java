@@ -1,10 +1,14 @@
 package service;
 
 import java.io.BufferedReader;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import contract.IServletHandleable;
 import validator.ServletActionValidator;
+
+import java.util.Arrays;
 import java.util.HashMap;
 
 public final class ServletService {
@@ -14,12 +18,19 @@ public final class ServletService {
 			HttpServletResponse response, 
 			IServletHandleable servletHandler
 	) throws Exception {
-		var action = request.getParameter("action");
 		var servletHandlerClass = servletHandler.getClass();
-		(new ServletActionValidator()).validate(action, servletHandlerClass);		
+		(new ServletActionValidator()).validate(request, response, servletHandlerClass);		
 		servletHandlerClass
-		.getMethod(action, HttpServletRequest.class, HttpServletResponse.class)
+		.getMethod(request.getParameter("action"), HttpServletRequest.class, HttpServletResponse.class)
 		.invoke(servletHandler, request, response);
+	}
+	
+	public String getCookie(HttpServletRequest request, String name) throws Exception {
+		return Arrays.stream(request.getCookies())
+				.map(cookie -> cookie.getName())
+				.filter(name::equals)
+				.findFirst()
+				.get();
 	}
 	
 	public HashMap<String, String> getRequestBody(HttpServletRequest request) throws Exception {

@@ -1,9 +1,8 @@
-<%@ page language="java" 
-    contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="entity.Todo" %>
-<%@ page import="java.lang.Math" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="entity.Todo"%>
+<%@ page import="java.lang.Math"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,48 +10,81 @@
 <title>Todos</title>
 <style>
 li {
-margin: 1%;
+	margin: 1%;
 }
+
 button:hover {
-cursor:pointer;
+	cursor: pointer;
 }
-* {margin: 0; padding: 0;}
-.container {height: 100%; width:100%;}
-.left, .right {display: inline-block; *display: inline; zoom: 1; vertical-align: top; }
-.left {width: 25%;}
-.right {width: 25%;}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	height: 100%;
+	width: 100%;
+}
+
+.left, .right {
+	display: inline-block;
+	*display: inline;
+	zoom: 1;
+	vertical-align: top;
+}
+
+.left {
+	width: 25%;
+}
+
+.right {
+	width: 25%;
+}
 </style>
 </head>
 <body>
-<div>
-<div id="create_todo_form">
-<textarea id="todo_text"></textarea>
-<br>
-<button onclick="createTodo()">Save</button>
-</div>
-<div id="update_todo_form" style="display: none">
-<textarea id="todo_text_to_edit"></textarea>
-<br>
-<button id="todo_edit_submit">Update</button>
-</div>
-</div>
-<hr>
-<div>
-<% ArrayList<Todo> todos = (ArrayList<Todo>) request.getAttribute("todos"); %>
-<% for (Todo todo : todos) { %>
-<div class="container">
-<div class="left">
-<p><%= todo.getText() %></p>
-</div>
-<div class="right">
-<button onclick="showUpdateForm('<%= todo.getId() %>','<%= todo.getText() %>')">Edit</button>
-<button onclick="dropTodo('<%= todo.getId() %>')">Delete</button>
-</div>
-</div>
-<br>
-<% } %>
-</div>
-<script>
+	<div class="container">
+		<div class="left">
+			<div id="create_todo_form">
+				<textarea id="todo_text"></textarea>
+				<br>
+				<button onclick="createTodo()">Save</button>
+			</div>
+			<div id="update_todo_form" style="display: none">
+				<textarea id="todo_text_to_edit"></textarea>
+				<br>
+				<button id="todo_edit_submit">Update</button>
+			</div>
+		</div>
+		<div class="right">
+			<button onclick="logout()">Logout</button>
+		</div>
+	</div>
+	<hr>
+	<div>
+		<%
+		ArrayList<Todo> todos = (ArrayList<Todo>) request.getAttribute("todos");
+		%>
+		<%
+		for (Todo todo : todos) {
+		%>
+		<div class="container">
+			<div class="left">
+				<p><%=todo.getText()%></p>
+			</div>
+			<div class="right">
+				<button
+					onclick="showUpdateForm('<%=todo.getId()%>','<%=todo.getText()%>')">Edit</button>
+				<button onclick="dropTodo('<%=todo.getId()%>')">Delete</button>
+			</div>
+		</div>
+		<br>
+		<%
+		}
+		%>
+	</div>
+	<script>
 function createTodo() {
 	let text = document.getElementById("todo_text").value;
 	if (!text) return;
@@ -85,6 +117,10 @@ function showUpdateForm(id, text) {
 		.then(() => window.location.reload())
 		.catch(e => console.warn(e));
 	}
+}
+function logout() {
+	if (!confirm("You sure?")) return;
+	window.location.href = "/EE/security?action=handleLogout";
 }
 </script>
 </body>

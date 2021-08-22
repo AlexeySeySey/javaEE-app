@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import service.ServletService;
 import contract.IServletHandleable;
+import handler.SecurityServletHandler;
 
 /**
  * Servlet implementation class SecurityServlet
@@ -25,8 +26,13 @@ public final class SecurityServlet extends HttpServlet {
 	 * @see Servlet#init(ServletConfig)
 	 */
 	public void init(ServletConfig config) throws ServletException {
-		this.servletHandler = null;
+		try {
+		this.servletHandler = new SecurityServletHandler();
         this.servletService = new ServletService();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServletException(e.getMessage());
+		}
 	}
 
 	/**
@@ -36,6 +42,7 @@ public final class SecurityServlet extends HttpServlet {
 		try {
 		this.servletService.invokeAction(request, response, this.servletHandler);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ServletException(e.getMessage());
 		}
 	}
@@ -47,6 +54,7 @@ public final class SecurityServlet extends HttpServlet {
 		try {
 			this.servletService.invokeAction(request, response, this.servletHandler);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ServletException(e.getMessage());
 		}
 	}

@@ -8,10 +8,10 @@
 </head>
 <body>
 <form action="security?action=handleLogin" method="POST">
-<label for="login">Login:</label>
-<input id="login" type="text" name="login">
+<label for="email">Email:</label>
+<input id="email" type="text" name="email" required>
 <label for="password">Password:</label>
-<input id="password" type="password" name="password">
+<input id="password" type="password" name="password" required>
 <input type="submit" value="Send">
 </form>
 </body>
