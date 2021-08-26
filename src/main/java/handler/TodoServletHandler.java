@@ -52,8 +52,7 @@ public final class TodoServletHandler implements IServletHandleable {
 		
 		String todoText = this.servletService
 				.getRequestBody(request)
-			 	.get("todo_text")
-			 	.replace("\\n", "<br>");
+			 	.get("todo_text");
 		
 		new CreateTodoValidator().validate(todoText);
 		
