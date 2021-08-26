@@ -8,27 +8,36 @@ import annotation.*;
 import service.ServletService;
 import service.SecurityService;
 import contract.IServletHandleable;
+import contract.ITodoRepository;
+import proxy.TodoRepositoryProxy;
 import entity.User;
+import exception.NothingFoundException;
+import constant.Error;
 
 public final class TodoServletHandler implements IServletHandleable {
 	
-	private TodoRepository todoRepository;
+	private ITodoRepository todoRepository;
 	
 	private ServletService servletService;
 	
 	private SecurityService securityService;
 	
 	public TodoServletHandler() throws Exception {
-		this.todoRepository = new TodoRepository();
+		this.todoRepository = new TodoRepositoryProxy();
 		this.servletService = new ServletService();
 		this.securityService = new SecurityService();
 	}
 	
-	@Action
 	@Authenticated
+	@Action(verb="GET")
 	public void getTodos(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		var currentUser = this.securityService.getCurrentUser(request);
+		User currentUser = null;
+		try {
+		  currentUser = this.securityService.getCurrentUser(request);
+		} catch (NothingFoundException e) {
+			throw new Exception(Error.FORBIDDEN.get());
+		}
 		
 		var todos = this.todoRepository.findAllFor(currentUser);
 		
@@ -37,23 +46,26 @@ public final class TodoServletHandler implements IServletHandleable {
 		request.getRequestDispatcher("jsp/todos.jsp").forward(request, response);
 	}
 	
-	@Action
 	@Authenticated
+	@Action(verb="POST")
 	public void createTodo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String todoText = this.servletService
 				.getRequestBody(request)
-			 	.get("todo_text");
+			 	.get("todo_text")
+			 	.replace("\\n", "<br>");
 		
 		new CreateTodoValidator().validate(todoText);
 		
-		User currentUser = this.securityService.getCurrentUser(request);
+		long creatorId = this.securityService
+				.getCurrentUser(request)
+				.getId();
 		
-		this.todoRepository.create(currentUser.getId(), todoText);
+		this.todoRepository.create(creatorId, todoText);
 	}
 	
-	@Action
 	@Authenticated
+	@Action(verb="POST")
 	public void updateTodo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String todoText = (String) this.servletService
@@ -62,15 +74,15 @@ public final class TodoServletHandler implements IServletHandleable {
 		
 		new UpdateTodoValidator().validate(todoText);
 		
-		this.todoRepository.update(request.getParameter("id"), todoText);
+		this.todoRepository.update(Long.parseLong(request.getParameter("id")), todoText);
 	}
 	
-	@Action
 	@Authenticated
+	@Action(verb="POST")
 	public void deleteTodo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		new DropTodoValidator().validate(request);
 		
-		this.todoRepository.delete(request.getParameter("id"));
+		this.todoRepository.deleteById(Long.parseLong(request.getParameter("id")));
 	}
 }

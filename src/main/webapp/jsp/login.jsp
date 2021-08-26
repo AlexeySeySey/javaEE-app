@@ -7,6 +7,8 @@
 <title>Sign-in</title>
 </head>
 <body>
+<h2>Sign in</h2>
+<br>
 <form action="security?action=handleLogin" method="POST">
 <label for="email">Email:</label>
 <input id="email" type="text" name="email" required>

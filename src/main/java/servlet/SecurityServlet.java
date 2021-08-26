@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import service.ServletService;
 import contract.IServletHandleable;
 import handler.SecurityServletHandler;
+import java.io.IOException;
 
 /**
  * Servlet implementation class SecurityServlet
@@ -38,24 +39,22 @@ public final class SecurityServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-		this.servletService.invokeAction(request, response, this.servletHandler);
+		this.servletService.invokeAction("GET", request, response, this.servletHandler);
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ServletException(e.getMessage());
+			this.servletService.jsonError(e, response);
 		}
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			this.servletService.invokeAction(request, response, this.servletHandler);
+			this.servletService.invokeAction("POST", request, response, this.servletHandler);
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ServletException(e.getMessage());
+			this.servletService.jsonError(e, response);
 		}
 	}
 

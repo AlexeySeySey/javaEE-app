@@ -1,5 +1,7 @@
 package servlet;
 
+import java.io.IOException;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,24 +36,22 @@ public class TodoServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			this.servletService.invokeAction(request, response, this.todoServletHandler);
+			this.servletService.invokeAction("GET", request, response, this.todoServletHandler);
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ServletException(e.getMessage());
+			this.servletService.jsonError(e, response);
 		}
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			this.servletService.invokeAction(request, response, this.todoServletHandler);
+			this.servletService.invokeAction("POST", request, response, this.todoServletHandler);
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ServletException(e.getMessage());
+			this.servletService.jsonError(e, response);
 		}
 	}
 }

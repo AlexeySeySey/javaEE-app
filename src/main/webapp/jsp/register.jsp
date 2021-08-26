@@ -7,6 +7,8 @@
 <title>Registration</title>
 </head>
 <body>
+<h2>Registration</h2>
+<br>
 <form action="security?action=handleRegistration" method="POST">
 <label for="email">Login:</label>
 <input id="email" type="text" name="email" required>

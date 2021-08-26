@@ -19,6 +19,7 @@ public final class ServletActionValidator {
 	}
 	
 	public void validate(
+			String verb,
 			HttpServletRequest request,
 			HttpServletResponse response,
 			Class<? extends IServletHandleable> handler
@@ -32,18 +33,19 @@ public final class ServletActionValidator {
 		
 		boolean validAction = Arrays.stream(handler.getDeclaredMethods())
 				.filter(action -> action.isAnnotationPresent(Action.class))
+				.filter(action -> action.getAnnotation(Action.class).verb().equals(verb))
 				.map(action -> action.getName())
 				.anyMatch(reqAction::equals);
 		
 		if (!validAction) {
 			throw new Exception(Error.ACTION_INVALID.get());
 		}
-		
-		var currentAction = handler.getDeclaredMethod(reqAction, request.getClass(), response.getClass());
+		var currentAction = handler.getDeclaredMethod(reqAction, HttpServletRequest.class, HttpServletResponse.class);
 		
 		boolean sharedAction = !currentAction.isAnnotationPresent(Guest.class) && !currentAction.isAnnotationPresent(Authenticated.class);
 		boolean guestOnlyAction = currentAction.isAnnotationPresent(Guest.class) && !currentAction.isAnnotationPresent(Authenticated.class);
 		boolean authOnlyAction = !currentAction.isAnnotationPresent(Guest.class) && currentAction.isAnnotationPresent(Authenticated.class);
+		
 		
 		try {
 		  this.securityService.getCurrentUser(request);

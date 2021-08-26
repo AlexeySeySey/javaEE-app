@@ -9,6 +9,8 @@ import constant.Security;
 import java.security.MessageDigest;
 import java.lang.StringBuilder;
 
+import exception.NothingFoundException;
+
 public final class SecurityService {
 
 	private ServletService servletService;
@@ -31,7 +33,7 @@ public final class SecurityService {
 		return stringBuilder.toString();
     }
 
-	public User getCurrentUser(HttpServletRequest request) throws Exception {
+	public User getCurrentUser(HttpServletRequest request) throws Exception, NothingFoundException {
 
 		String token = this.servletService.getCookie(request, Security.AUTH_TOKEN.get());
 		

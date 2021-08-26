@@ -2,7 +2,8 @@ package constant;
 
 public enum Mail {
 	
-	FROM("sinyavskij00@gmail.com"),
+	FROM("doe674263@gmail.com"),
+	PASSWD("6ab59832-7958-4b96-952b-88f0866be58e"),
 	HOST("smtp.gmail.com");
 	
 	private String data;

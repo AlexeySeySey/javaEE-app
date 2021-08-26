@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Todos</title>
+<link rel="icon" href="storage/home--v1.png" sizes="any">
 <style>
 li {
 	margin: 1%;
@@ -70,12 +71,14 @@ button:hover {
 		for (Todo todo : todos) {
 		%>
 		<div class="container">
-			<div class="left">
-				<p><%=todo.getText()%></p>
+			<div class="left" style="border-bottom: 1px solid grey;">
+			<p>
+				<%=todo.getText()%>
+			</p>
 			</div>
 			<div class="right">
 				<button
-					onclick="showUpdateForm('<%=todo.getId()%>','<%=todo.getText()%>')">Edit</button>
+					onclick="showUpdateForm(`<%=todo.getId()%>`,`<%=todo.getText()%>`)">Edit</button>
 				<button onclick="dropTodo('<%=todo.getId()%>')">Delete</button>
 			</div>
 		</div>
@@ -106,8 +109,9 @@ function dropTodo(id) {
 function showUpdateForm(id, text) {
 	document.getElementById("create_todo_form").style.display = "none";
 	document.getElementById("update_todo_form").style.display = "block";
-	document.getElementById("todo_text_to_edit").value = text;
+	document.getElementById("todo_text_to_edit").value = text.replaceAll("<br>", "\n");
 	document.getElementById("todo_edit_submit").onclick = () => {
+		if (!document.getElementById("todo_text_to_edit").value) return; 
 		fetch("?action=updateTodo&id=" + id, {
 			method: "POST",
 			body: JSON.stringify({

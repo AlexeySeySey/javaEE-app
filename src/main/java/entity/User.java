@@ -1,6 +1,8 @@
 package entity;
 
-public final class User {
+import contract.IEntity;
+
+public final class User implements IEntity {
 	
 	private long id;
 	
@@ -14,6 +16,7 @@ public final class User {
 		this.password = password;
 	}
 	
+	@Override
 	public long getId() {
 		return this.id;
 	}

@@ -1,6 +1,8 @@
 package entity;
 
-public final class Todo {
+import contract.IEntity;
+
+public final class Todo implements IEntity {
 	
 	private long id;
 	
@@ -14,6 +16,7 @@ public final class Todo {
 		this.userId = userId;
 	}
 	
+	@Override
 	public long getId() {
 		return this.id;
 	}

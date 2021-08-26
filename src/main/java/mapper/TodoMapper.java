@@ -2,20 +2,22 @@ package mapper;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import contract.IEntity;
+import contract.IMapper;
 import entity.Todo;
 
-public final class TodoMapper {
+public final class TodoMapper implements IMapper {
 	
-	public ArrayList<Todo> toArrayList(ResultSet resultSet) throws Exception {
+	@Override
+	public ArrayList<IEntity> toArrayList(ResultSet resultSet) throws Exception {
 		
-		ArrayList<Todo> todos = new ArrayList<Todo>();
+		ArrayList<IEntity> todos = new ArrayList<IEntity>();
 		
 		while(resultSet.next()) {
 			todos.add(
 					new Todo(resultSet.getLong("id"), resultSet.getLong("user_id"), resultSet.getString("text"))
 			);
-		}
-		
+		}	
 		return todos;
 	}
 }

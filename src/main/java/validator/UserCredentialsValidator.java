@@ -19,7 +19,7 @@ public final class UserCredentialsValidator {
 		}
 
 		if (password.length() < 8) {
-			throw new Exception(Error.SHORT_PASsWORD.get());
+			throw new Exception(Error.SHORT_PASSWORD.get());
 		}
 	}
 }

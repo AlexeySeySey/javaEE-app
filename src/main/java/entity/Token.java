@@ -1,6 +1,8 @@
 package entity;
 
-public final class Token {
+import contract.IEntity;
+
+public final class Token implements IEntity {
 	
 	private long id;
 	
@@ -17,6 +19,7 @@ public final class Token {
 		this.expiredAt = expiredAt;
 	}
 	
+	@Override
 	public long getId() {
 		return this.id;
 	}
