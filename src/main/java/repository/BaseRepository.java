@@ -43,25 +43,25 @@ public abstract class BaseRepository {
 	public ArrayList<IEntity> findBy(Map<String, String> fields) throws Exception, NothingFoundException {
 
 		var query = new StringBuilder("select * from " + this.getTable() + " where ");
-		for (int i = 0; i < fields.size(); i++) {
-			query.append("?=? and ");
+		for (String key : fields.keySet()) {
+			query.append(key + "=? and ");
 		}
-		int iteration = 0;
+		
 		String queryString = query.toString();
 		queryString = queryString.substring(0, queryString.length() - 5);
+		
 		var stmt = this.dbService.prepare(queryString);
-		var iterator = fields.entrySet().iterator();
-		while (iterator.hasNext()) {
+		int iteration = 1;
+		for (var value : fields.values().toArray()) {
+			stmt.setString(iteration, (String) value);
 			iteration += 1;
-			var entry = iterator.next();
-			stmt.setString(iteration, entry.getKey());
-			iteration += 1;
-			stmt.setString(iteration, entry.getValue());
 		}
+		
 		ArrayList<IEntity> results = this.getMapper().toArrayList(stmt.executeQuery());
 		if (results.size() == 0) {
 			throw new NothingFoundException(Error.NO_ITEM_FOUND.get());
 		}
+		
 		return results;
 	}
 }

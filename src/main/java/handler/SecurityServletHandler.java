@@ -83,9 +83,12 @@ public final class SecurityServletHandler implements IServletHandleable {
 
 		User user = null;
 		try {
-		   user = (User) this.userRepository.findBy("email", request.getParameter("email")).get(0);
+		   user = (User) this.userRepository.findBy(Map.of(
+				   "email", request.getParameter("email"),
+				   "password", this.securityService.encryptString(request.getParameter("password"))
+		   )).get(0);
 		} catch (NothingFoundException e) {
-			throw new Exception(Error.INVALID_EMAIL.get());
+			throw new Exception(Error.INVALID_CREDS.get());
 		}
 
 		String token = this.securityService.encryptString(user.getId() + Security.AUTH_SALT.get());

@@ -10,6 +10,7 @@ public enum Error {
 	FORBIDDEN("Action is not allowed"),
 	CREDENTIALS_LACK("Not enough credentials"),
 	INVALID_EMAIL("Invalid email"),
+	INVALID_CREDS("Invalid credentials"),
 	COOKIE_NOT_FOUND("Cookie not found"),
 	SHORT_PASSWORD("Password should be 8 character length or longer");
 	
